@@ -4,17 +4,12 @@ import json
 import os
 import pickle
 
+import logone
 import requests
 from requests import RequestException
 
 _APP_PATH = os.path.normpath(os.path.dirname(os.path.abspath(__file__)))
-
-_DEBUG = True
-
-
-def debug(*args, **kwargs):
-    if _DEBUG:
-        print(*args, **kwargs)
+_LOGGER = logone.get_logger(__name__)
 
 
 def path(*name):
@@ -47,7 +42,7 @@ def read_file(file_name):
         try:
             return f.read().decode('UTF-8')
         except Exception as e:
-            debug(e)
+            _LOGGER.exception(e)
 
 
 def write_file(data, file_name):
@@ -57,7 +52,7 @@ def write_file(data, file_name):
         try:
             f.write(data.encode('UTF-8'))
         except Exception as e:
-            debug(e)
+            _LOGGER.exception(e)
 
 
 def read_bytes(file_name):
@@ -67,7 +62,7 @@ def read_bytes(file_name):
         try:
             return f.read()
         except Exception as e:
-            debug(e)
+            _LOGGER.exception(e)
 
 
 def write_bytes(data, file_name):
@@ -77,7 +72,7 @@ def write_bytes(data, file_name):
         try:
             f.write(data)
         except Exception as e:
-            debug(e)
+            _LOGGER.exception(e)
 
 
 def serialize(obj, file_name):
@@ -87,7 +82,7 @@ def serialize(obj, file_name):
         try:
             pickle.dump(obj, f)
         except Exception as e:
-            debug(e)
+            _LOGGER.exception(e)
 
 
 def deserialize(file_name):
@@ -97,7 +92,7 @@ def deserialize(file_name):
         try:
             return pickle.load(f)
         except Exception as e:
-            debug(e)
+            _LOGGER.exception(e)
 
 
 def read_lines(file_name):
@@ -109,7 +104,7 @@ def read_lines(file_name):
             for line in f:
                 lines.append(line.decode('UTF-8').rstrip('\r\n'))
         except Exception as e:
-            debug(e)
+            _LOGGER.exception(e)
     return lines
 
 
@@ -121,7 +116,7 @@ def write_lines(lines, file_name, end_line='\n'):
             for line in lines:
                 f.write((line + end_line).encode('UTF-8'))
         except Exception as e:
-            debug(e)
+            _LOGGER.exception(e)
 
 
 def read_json(file_name):
@@ -131,7 +126,7 @@ def read_json(file_name):
         try:
             return json.loads(f.read().decode('UTF-8'))
         except Exception as e:
-            debug(e)
+            _LOGGER.exception(e)
 
 
 def write_json(obj, file_name):
@@ -141,7 +136,7 @@ def write_json(obj, file_name):
         try:
             f.write(json.dumps(obj, indent=4, ensure_ascii=False).encode('UTF-8'))
         except Exception as e:
-            debug(e)
+            _LOGGER.exception(e)
 
 
 def download_file(url, file_name=None):
@@ -154,5 +149,5 @@ def download_file(url, file_name=None):
                 return content
             write_bytes(content, file_name)
     except RequestException as e:
-        debug(e)
+        _LOGGER.exception(e)
     return None
