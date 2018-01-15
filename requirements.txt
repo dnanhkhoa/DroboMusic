@@ -1,4 +1,6 @@
 regex
+logone
 requests
 dropbox
+flask-ask
 apscheduler
